@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Registracija.Data;
+using Registracija.Services;
 
 namespace Registracija
 {
@@ -22,6 +23,7 @@ namespace Registracija
         {
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<DataContext>(d => d.UseSqlServer(connectionString));
+            services.AddScoped<RegistrationService>();
             services.AddControllersWithViews();
         }
 
