@@ -1,0 +1,58 @@
+﻿@model List<Registracija.Dtos.RegistrationDto>
+
+<form asp-action="SaveChanges" method="post">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Registracijos požymiai</th>
+                <th>Reikšmė</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model[i].QuestionValue)
+                        @Html.HiddenFor(modelItem => Model[i].QuestionId)
+                        @Html.HiddenFor(modelItem => Model[i].RegId)
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(modelItem => Model[i].AnswerId, new SelectList(Model[i].Answers, "Id", "Value"),
+                            new { @class = "form-control dropdown", @id = "dropdown", @disabled = "disabled" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="form-group">
+        <input type="button" value="Koreguoti požymius" class="btn btn-primary" id="Button1" onclick="EnableButtons()" />
+        <input type="submit" value="Saugoti pataisymus" class="btn btn-primary disabled" id="Button2" disabled />
+        <input type="reset" value="Atšaukti pataisymus" class="btn btn-primary disabled" id="Button3" disabled />
+    </div>
+
+</form>
+
+@section Scripts{
+    <script>
+        function EnableButtons() {
+            var button1 = document.getElementById("Button1");
+            var button2 = document.getElementById("Button2");
+            var button3 = document.getElementById("Button3");
+            var dropdownElements = Array.from(document.getElementsByClassName("dropdown"));
+            button2.disabled = false;
+            button2.className = "btn btn-primary";
+            button3.disabled = false;
+            button3.className = "btn btn-primary";
+            button1.disabled = true;
+            button1.className = "btn btn-primary disabled";
+
+            dropdownElements.forEach((element) => {
+                element.removeAttribute("disabled");
+            });
+        }
+    </script>
+
+}
+

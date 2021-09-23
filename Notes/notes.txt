@@ -1,0 +1,9 @@
+﻿insert into Questions (Value)
+values ('Reikia atlikti rangos darbus'), ('Rangos darbus atliks'), ('Verslo klientas'), ('Skaičiavimo metodas'), ('Svarbus klientas')
+
+insert into Answers (Value, QuestionId)
+values ('Taip', 1), ('Ne', 1),
+('Metinis rangovas', 2), ('Mėnesinis rangovas', 2),
+('Ne', 3), ('Taip', 3),
+('Automatinis', 4), ('Rankinis', 4),
+('Taip', 5)
