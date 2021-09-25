@@ -5,7 +5,6 @@ namespace Registracija.Dtos
 {
     public class RegistrationDto
     {
-        public int? RegId { get; set; }
         public int QuestionId { get; set; }
         public string QuestionValue { get; set; }
         public int AnswerId { get; set; }

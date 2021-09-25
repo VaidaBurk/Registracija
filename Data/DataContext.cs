@@ -21,7 +21,7 @@ namespace Registracija.Data
                 .WithOne(a => a.Question);
 
             modelBuilder.Entity<Registration>()
-                .HasKey(r => new { r.RegId, r.QuestionId, r.AnswerId });
+                .HasKey(r => new { r.RegId, r.QuestionId });
 
             modelBuilder.Entity<Registration>()
                 .HasOne(r => r.Question)

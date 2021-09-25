@@ -1,6 +1,6 @@
 ﻿@model List<Registracija.Dtos.RegistrationDto>
 
-<form asp-action="SaveChanges" method="post">
+<form id="registrationFormId" asp-action="SaveChanges" method="post">
     <table class="table">
         <thead>
             <tr>
@@ -16,7 +16,6 @@
                     <td>
                         @Html.DisplayFor(modelItem => Model[i].QuestionValue)
                         @Html.HiddenFor(modelItem => Model[i].QuestionId)
-                        @Html.HiddenFor(modelItem => Model[i].RegId)
                     </td>
                     <td>
                         @Html.DropDownListFor(modelItem => Model[i].AnswerId, new SelectList(Model[i].Answers, "Id", "Value"),
@@ -27,31 +26,63 @@
         </tbody>
     </table>
     <div class="form-group">
-        <input type="button" value="Koreguoti požymius" class="btn btn-primary" id="Button1" onclick="EnableButtons()" />
-        <input type="submit" value="Saugoti pataisymus" class="btn btn-primary disabled" id="Button2" disabled />
-        <input type="reset" value="Atšaukti pataisymus" class="btn btn-primary disabled" id="Button3" disabled />
+        <input type="button" value="Koreguoti požymius" class="btn btn-primary" id="Button1" />
+        <input type="submit" value="Saugoti pataisymus" class="btn btn-primary" id="Button2" disabled />
+        <input type="reset" value="Atšaukti pataisymus" class="btn btn-primary" id="Button3" disabled onclick="this.blur();" />
     </div>
 
 </form>
 
 @section Scripts{
     <script>
-        function EnableButtons() {
-            var button1 = document.getElementById("Button1");
-            var button2 = document.getElementById("Button2");
-            var button3 = document.getElementById("Button3");
-            var dropdownElements = Array.from(document.getElementsByClassName("dropdown"));
-            button2.disabled = false;
-            button2.className = "btn btn-primary";
-            button3.disabled = false;
-            button3.className = "btn btn-primary";
-            button1.disabled = true;
-            button1.className = "btn btn-primary disabled";
 
+        var button1 = document.getElementById("Button1");
+        var button2 = document.getElementById("Button2");
+        var button3 = document.getElementById("Button3");
+        var dropdownElements = Array.from(document.getElementsByClassName("dropdown"));
+
+        button1.addEventListener("click", function () {
+            button1.toggleAttribute("disabled");
+            button2.toggleAttribute("disabled");
+            button3.toggleAttribute("disabled");
             dropdownElements.forEach((element) => {
-                element.removeAttribute("disabled");
+                element.toggleAttribute("disabled");
             });
-        }
+        });
+
+
+        // this is the id of the form
+        $("#registrationFormId").submit(function (e) {
+
+            e.preventDefault();
+            // avoid to execute the actual submit of the form. (if commented out, will trigger html's submit form instead of hiting jquery)
+
+            const form = $(this);
+            // 'this' represents a form (we accessed form's element through '$("#registrationFormId")' so this is a form's data)
+            const baseUrl = form.attr('action');
+            // html form attribute stores action which is called when we submit a form. In our example baseURL consits of 'Registration' and action 'SaveChanges'. Output is 'Registration/SaveChanges'. We can also remove this line and construct url by hand
+            const regId = new URL(document.URL).searchParams.get("regId");
+            // from DOM (document object model) we extract path variable
+            const url = baseUrl + '?regId=' + regId;
+            // as our controller requires '[FromQuery] int regId' we need to build URL with path variable
+
+            $.ajax({
+                type: "POST", // same as in form. By adding type, we no longer need inside <form> attribute 'method="post"'
+                url: url,
+                data: form.serialize(), // serializes the form's elements.
+                success: function (data) {
+                    console.log(data); // show response.
+
+                    button1.toggleAttribute("disabled");
+                    button2.toggleAttribute("disabled");
+                    button3.toggleAttribute("disabled");
+                    dropdownElements.forEach((element) => {
+                        element.toggleAttribute("disabled");
+                    });
+                }
+            });
+        });
+
     </script>
 
 }

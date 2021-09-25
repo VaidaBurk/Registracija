@@ -15,10 +15,9 @@ namespace Registracija.Services
         {
             _context = context;
         }
-        public int? SaveChangesAndReturnRegId(List<RegistrationDto> registrationDtos)
+        public int? SaveChanges(int regId, List<RegistrationDto> registrationDtos)
         {
             var registrationsInDb = _context.Registrations.Select(r => r.RegId).ToList();
-            int? regId = registrationDtos.First().RegId;
 
             if (registrationsInDb.Contains(regId) == false)
             {
@@ -26,12 +25,11 @@ namespace Registracija.Services
                 {
                     var mappedRegistration = new Registration()
                     {
-                        RegId = question.RegId,
+                        RegId = regId,
                         QuestionId = question.QuestionId,
                         AnswerId = question.AnswerId
                     };
                     _context.Registrations.Add(mappedRegistration);
-                    _context.SaveChanges();
                 }
             }
             else
@@ -40,14 +38,14 @@ namespace Registracija.Services
                 {
                     var mappedRegistration = new Registration()
                     {
-                        RegId = question.RegId,
+                        RegId = regId,
                         QuestionId = question.QuestionId,
                         AnswerId = question.AnswerId
                     };
                     _context.Registrations.Update(mappedRegistration);
-                    _context.SaveChanges();
                 }
             }
+            _context.SaveChanges();
             return (regId);
         }
 
@@ -60,7 +58,6 @@ namespace Registracija.Services
             {
                 var registrationDto = new RegistrationDto()
                 {
-                    RegId = regId,
                     QuestionId = question.QuestionId,
                     QuestionValue = questions.Where(q => q.Id == question.QuestionId).Select(q => q.Value).FirstOrDefault().ToString(),
                     AnswerId = question.AnswerId,
@@ -80,7 +77,6 @@ namespace Registracija.Services
             {
                 var registrationDto = new RegistrationDto()
                 {
-                    RegId = regId,
                     QuestionId = question.Id,
                     QuestionValue = question.Value,
                     Answers = question.Answers

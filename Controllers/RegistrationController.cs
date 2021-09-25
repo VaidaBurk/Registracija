@@ -33,9 +33,9 @@ namespace Registracija.Controllers
             }
         }
 
-        public IActionResult SaveChanges(List<RegistrationDto> registrationDtos)
+        public IActionResult SaveChanges([FromQuery] int regId, List<RegistrationDto> registrationDtos)
         {
-            int? regId = _registrationService.SaveChangesAndReturnRegId(registrationDtos);
+            _registrationService.SaveChanges(regId, registrationDtos);
             return RedirectToAction("Index", new { regId });
         }
 
